@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-community-dialects:6.4.4.Final'
     implementation 'org.xerial:sqlite-jdbc:3.45.2.0'
 
-
+    runtimeOnly 'org.xerial:sqlite-jdbc:3.42.0.0'
 
 
     compileOnly 'org.projectlombok:lombok'
@@ -39,3 +39,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register("runDatabaseTest", JavaExec) {
+    group = "application"
+    description = "Run DatabaseTestRunner"
+    mainClass.set("com.kato.library.library_management.DatabaseTestRunner")
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+

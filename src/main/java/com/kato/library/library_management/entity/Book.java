@@ -1,10 +1,14 @@
 package com.kato.library.library_management.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "books")
 public class Book {
 
@@ -18,15 +22,24 @@ public class Book {
     @Column(length = 255)
     private String author;
 
+    @Column(nullable = false, unique = true, length = 20)
+    private String isbn;
+
+    @Column(name = "published_year")
+    private Integer publishedYear;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(length = 500)
+    private String coverUrl;
+
+    @Column(nullable = false, length = 50)
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @Column(nullable = false)
-    private int quantity;
-
-    @Column(nullable = false)
-    private int available;
 
     @Column
     private LocalDateTime createdAt;
@@ -35,64 +48,5 @@ public class Book {
     public void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
-    // getters/setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(int available) {
-        this.available = available;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }
 

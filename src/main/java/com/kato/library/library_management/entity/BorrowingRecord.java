@@ -1,10 +1,14 @@
 package com.kato.library.library_management.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "borrowing_records")
 public class BorrowingRecord {
 
@@ -20,6 +24,10 @@ public class BorrowingRecord {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private User admin;
+
     @Column(nullable = false)
     private LocalDateTime borrowedAt;
 
@@ -29,55 +37,7 @@ public class BorrowingRecord {
     @Column
     private LocalDateTime returnedAt;
 
-    // getters/setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public LocalDateTime getBorrowedAt() {
-        return borrowedAt;
-    }
-
-    public void setBorrowedAt(LocalDateTime borrowedAt) {
-        this.borrowedAt = borrowedAt;
-    }
-
-    public LocalDateTime getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public LocalDateTime getReturnedAt() {
-        return returnedAt;
-    }
-
-    public void setReturnedAt(LocalDateTime returnedAt) {
-        this.returnedAt = returnedAt;
-    }
-
+    @Column(nullable = false, length = 50)
+    private String status;
 }
 

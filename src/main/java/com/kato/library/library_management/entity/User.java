@@ -14,6 +14,16 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USER;
+
+    public enum Role {
+        USER,
+        ADMIN
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,9 +39,6 @@ public class User {
 
     @Column(length = 255)
     private String avatarUrl;
-
-    @Column(nullable = false, length = 50)
-    private String role;   // ADMIN / USER
 
     @Column
     private LocalDateTime createdAt;
@@ -49,5 +56,8 @@ public class User {
     public void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    //    @Column(nullable = false, length = 50)
+//    private String role;   // ADMIN / USER
 
 }

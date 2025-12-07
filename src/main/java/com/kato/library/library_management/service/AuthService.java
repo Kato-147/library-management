@@ -37,14 +37,19 @@ public class AuthService {
     }
 
 
-    public String login(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Sai email hoặc mật khẩu."));
+    public String login(String email, String rawPassword) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Sai email hoặc mật khẩu.");
+            if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+                throw new RuntimeException("Sai mật khẩu");
+            }
+
+            return jwtUtil.generateToken(user.getEmail());
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());
         }
-
-        return jwtUtil.generateToken(user.getEmail());
     }
 }

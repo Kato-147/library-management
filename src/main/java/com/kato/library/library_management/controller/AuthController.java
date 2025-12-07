@@ -26,11 +26,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
-        String password = body.get("password");
+        try {
+            String email = body.get("email");
+            String password = body.get("password");
 
-        String token = authService.login(email, password);
+            String token = authService.login(email, password);
 
-        return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.ok(Map.of("token", token));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+        }
     }
 }

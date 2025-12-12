@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
 
 
+import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,6 +16,9 @@ public class JwtUtil {
     // KHÔNG dùng chuỗi ngắn. Phải >= 32 bytes.
     //private final String SECRET = "KATO_SECRET_KEY";
     private final String SECRET = "KATO_SUPER_ULTRA_SECRET_KEY_THAT_IS_LONG_ENOUGH_123456";
+
+    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+
 
     private final long EXPIRATION = 86400000; // 24h
 
@@ -33,7 +37,7 @@ public class JwtUtil {
                 .addClaims(Map.of("role", role)) //
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -55,11 +59,17 @@ public class JwtUtil {
 //    }
 
     public String extractEmail(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
+            System.out.println("JWT invalid: " + e.getMessage());
+            return null;
+        }
     }
 
     public String extractRole(String token) {

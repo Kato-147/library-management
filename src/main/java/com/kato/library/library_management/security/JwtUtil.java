@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -26,9 +27,10 @@ public class JwtUtil {
 //                .compact();
 //    }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
+                .addClaims(Map.of("role", role)) //
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
@@ -43,12 +45,28 @@ public class JwtUtil {
 //                .getSubject();
 //    }
 
+//    public String extractEmail(String token) {
+//        return Jwts.parserBuilder()
+//                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .getSubject();
+//    }
+
     public String extractEmail(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
-                .build()
+        return Jwts.parser()
+                .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public String extractRole(String token) {
+        return (String) Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role");
     }
 }

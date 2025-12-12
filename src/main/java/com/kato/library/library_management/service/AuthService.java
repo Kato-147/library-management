@@ -13,6 +13,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    //System.out.println("DEBUG: " + userRepository.findByEmail("admin@gmail.com"));
+
+
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil) {
@@ -46,7 +49,7 @@ public class AuthService {
                 throw new RuntimeException("Sai mật khẩu");
             }
 
-            return jwtUtil.generateToken(user.getEmail());
+            return jwtUtil.generateToken(user.getEmail(),user.getRole().name());
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Đăng nhập thất bại: " + e.getMessage());

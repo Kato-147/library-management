@@ -38,4 +38,12 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        // Không thể "invalidate" JWT trong server
+        // chỉ trả về thông báo để client xoá token đi
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
+
 }
